@@ -33,6 +33,46 @@
                 }
             }
         }
+
+        function initMobileCardEffects() {
+            if (window.innerWidth > 768) return;
+
+            const cards = document.querySelectorAll('.feat-card');
+            const cardObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('in-view');
+                    } else {
+                        entry.target.classList.remove('in-view'); // remove when scrolled away
+                    }
+                });
+            }, { threshold: 0.5 }); // triggers when 50% of card is visible
+
+            cards.forEach(card => cardObserver.observe(card));
+        }
+
+        initMobileCardEffects();
+        window.addEventListener('resize', initMobileCardEffects);
+
+        function initMobileSpecEffects() {
+            if (window.innerWidth > 768) return;
+
+            const rows = document.querySelectorAll('.spec-row');
+            const rowObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('in-view');
+                    } else {
+                        entry.target.classList.remove('in-view');
+                    }
+                });
+            }, { threshold: 0.6 }); // 60% visible — rows are short so this feels snappy
+
+            rows.forEach(row => rowObserver.observe(row));
+        }
+
+initMobileSpecEffects();
+window.addEventListener('resize', initMobileSpecEffects);
     </script>
 
     <style>
@@ -824,8 +864,65 @@
             #faq {
                 padding-top: 40px;
             }
+            #testimonial{
+                padding-top: 40px;
+            }
+            .features{
+                border: 1px solid rgb(0 200 255 / 28%);
+            }
+            .feat{
+                border-bottom: 1px solid rgb(0 200 255 / 28%);
+            }
         }
-    
+        /*FEATURES MOBILE IN VIEW*/
+        @media (max-width: 768px) {
+            /* ... your existing mobile styles ... */
+            
+            .feat-card.in-view {
+                transform: translateY(-6px);
+                border-color: #60a5fa59;
+            }
+            .feat-card.in-view::after {
+                opacity: 1;
+            }
+            .feat-card.in-view .feat-icon-wrap {
+                transform: scale(1.15) rotate(-4deg);
+            }
+            .feat-card.in-view[data-color="blue"]   { border-color: #60a5fa59; }
+            .feat-card.in-view[data-color="purple"] { border-color: #a8833aa4; }
+            .feat-card.in-view[data-color="green"]  { border-color: #a78bfa80; }
+            .feat-card.in-view[data-color="blue"]   .feat-icon-wrap { box-shadow: 0 0 24px #60a5fa59; }
+            .feat-card.in-view[data-color="purple"] .feat-icon-wrap { box-shadow: 0 0 24px #a8833a2d; }
+            .feat-card.in-view[data-color="green"]  .feat-icon-wrap { box-shadow: 0 0 24px #a78bfab6; }
+        }
+        
+
+        @media (max-width: 768px) {
+            /* ... your existing mobile styles SPECS IN VIEW... */
+
+            .spec-row.in-view {
+                /* transform: translateX(4px); */
+                border-color: rgba(74,158,255,0.15) !important;
+            }
+            .spec-row.in-view .spec-accent-bar {
+                transform: scaleY(1) !important;
+            }
+            .spec-row.in-view .spec-bg-glow {
+                opacity: 1 !important;
+            }
+            .spec-row.in-view .spec-number {
+                color: rgba(74,158,255,0.4) !important;
+            }
+            .spec-row.in-view .spec-value {
+                color: #60a5fa !important;
+            }
+            .spec-row.in-view .spec-badge {
+                opacity: 1 !important;
+            }
+            .spec-row.in-view .spec-bar-fill {
+                width: 100% !important;
+            }
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -1340,16 +1437,16 @@
             </div>
             <div class="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-4 h-[800px] md:h-[600px]">
                 <div class="md:col-span-2 md:row-span-2 relative overflow-hidden glass-card rounded-2xl group reveal">
-                    <img src="https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?auto=format&fit=crop&q=80&w=1000" class="object-cover w-full h-full opacity-80 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-110 transform" alt="Side View">
+                    <img src="close.png" class="object-cover w-full h-full opacity-80 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-110 transform" alt="Side View">
                     <div class="absolute bottom-0 left-0 p-6 bg-gradient-to-t from-black to-transparent w-full">
                         <span class="text-white font-bold text-lg">Ergonomic Profile</span>
                     </div>
                 </div>
                 <div class="relative overflow-hidden glass-card rounded-2xl group reveal">
-                    <img src="https://images.unsplash.com/photo-1555617981-77872004c672?auto=format&fit=crop&q=80&w=800" class="object-cover w-full h-full opacity-70 group-hover:opacity-100 transition-opacity duration-500" alt="Top View">
+                    <img src="top-view.png" class="object-cover w-full h-full opacity-70 group-hover:opacity-100 transition-opacity duration-500" alt="Top View">
                 </div>
                 <div class="relative overflow-hidden glass-card rounded-2xl group reveal">
-                    <img src="https://images.unsplash.com/photo-1567427720852-f4c959000199?auto=format&fit=crop&q=80&w=800" class="object-cover w-full h-full opacity-70 group-hover:opacity-100 transition-opacity duration-500" alt="Detail">
+                    <img src="side-view.png" class="object-cover w-full h-full opacity-70 group-hover:opacity-100 transition-opacity duration-500" alt="Detail">
                 </div>
                 <div class="md:col-span-2 relative overflow-hidden glass-card rounded-2xl group reveal">
                     <div class="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent z-10 flex items-center px-8">
@@ -1358,7 +1455,7 @@
                             <p class="text-gray-400 text-sm">Built to withstand intense usage.</p>
                         </div>
                     </div>
-                    <img src="https://images.unsplash.com/photo-1591405351990-4726e331f141?auto=format&fit=crop&q=80&w=1000" class="object-cover w-full h-full opacity-60" alt="Cable">
+                    <img src="wire.png" class="object-cover w-full h-full opacity-60" alt="Cable">
                 </div>
             </div>
         </div>
@@ -1394,94 +1491,94 @@
         <div class="flex flex-col gap-0.5 reveal">
 
             <!-- row macro — repeat for each spec -->
-        <div class="group flex items-center gap-5 px-7 py-[22px] bg-[#0d0d0d] border border-white/5 rounded-xl relative overflow-hidden transition-all duration-300 cursor-default hover:border-blue-400/15 hover:translate-x-1">
-            <div class="absolute left-0 top-0 bottom-0 w-0.5 bg-blue-400 scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-bottom rounded-bl-xl"></div>
-            <div class="absolute inset-0 bg-gradient-to-r from-blue-500/[0.04] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            <span class="text-[9px] text-white/12 tracking-[.25em] min-w-[24px] group-hover:text-blue-400/40 transition-colors shrink-0">01</span>
+        <div class="spec-row group flex items-center gap-5 px-7 py-[22px] bg-[#0d0d0d] border border-white/5 rounded-xl relative overflow-hidden transition-all duration-300 cursor-default hover:border-blue-400/15 hover:translate-x-1">
+            <div class="spec-accent-bar absolute left-0 top-0 bottom-0 w-0.5 bg-blue-400 scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-bottom rounded-bl-xl"></div>
+            <div class="spec-bg-glow absolute inset-0 bg-gradient-to-r from-blue-500/[0.04] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <span class="spec-number text-[9px] text-white/12 tracking-[.25em] min-w-[24px] group-hover:text-blue-400/40 transition-colors shrink-0">01</span>
             <div class="w-px h-7 bg-white/[0.06] shrink-0"></div>
             <div class="flex-1">
                 <div class="text-[9px] text-white/28 tracking-[.18em] uppercase mb-1">Connection Type</div>
-                <div class="text-[13px] font-bold text-[#e8e8e8] group-hover:text-blue-400 transition-colors">Wired USB 2.0</div>
+                <div class="spec-value text-[13px] font-bold text-[#e8e8e8] group-hover:text-blue-400 transition-colors">Wired USB 2.0</div>
                 <div class="mt-2 h-0.5 bg-white/[0.05] rounded-full overflow-hidden">
-                    <div class="h-full w-[55%] group-hover:w-full transition-all duration-500 rounded-full" style="background:linear-gradient(90deg,rgba(74,158,255,0.5),rgba(74,158,255,1))"></div>
+                    <div class="spec-bar-fill h-full w-[55%] group-hover:w-full transition-all duration-500 rounded-full" style="background:linear-gradient(90deg,rgba(74,158,255,0.5),rgba(74,158,255,1))"></div>
                 </div>
             </div>            
-            <span class="text-[8px] text-blue-400/45 tracking-[.15em] uppercase border border-blue-400/20 px-2 py-0.5 rounded-sm shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">Plug &amp; Play</span>
+            <span class="spec-badge text-[8px] text-blue-400/45 tracking-[.15em] uppercase border border-blue-400/20 px-2 py-0.5 rounded-sm shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">Plug &amp; Play</span>
         </div>
 
-        <div class="group flex items-center gap-5 px-7 py-[22px] bg-[#0d0d0d] border border-white/5 rounded-xl relative overflow-hidden transition-all duration-300 cursor-default hover:border-blue-400/15 hover:translate-x-1">
-            <div class="absolute left-0 top-0 bottom-0 w-0.5 bg-blue-400 scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-bottom rounded-bl-xl"></div>
-            <div class="absolute inset-0 bg-gradient-to-r from-blue-500/[0.04] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            <span class="text-[9px] text-white/12 tracking-[.25em] min-w-[24px] group-hover:text-blue-400/40 transition-colors shrink-0">02</span>
+        <div class="spec-row group flex items-center gap-5 px-7 py-[22px] bg-[#0d0d0d] border border-white/5 rounded-xl relative overflow-hidden transition-all duration-300 cursor-default hover:border-blue-400/15 hover:translate-x-1">
+            <div class="spec-accent-bar absolute left-0 top-0 bottom-0 w-0.5 bg-blue-400 scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-bottom rounded-bl-xl"></div>
+            <div class="spec-bg-glow absolute inset-0 bg-gradient-to-r from-blue-500/[0.04] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <span class="spec-number text-[9px] text-white/12 tracking-[.25em] min-w-[24px] group-hover:text-blue-400/40 transition-colors shrink-0">02</span>
             <div class="w-px h-7 bg-white/[0.06] shrink-0"></div>
             <div class="flex-1">
                 <div class="text-[9px] text-white/28 tracking-[.18em] uppercase mb-1">Sensor Type</div>
-                <div class="text-[13px] font-bold text-[#e8e8e8] group-hover:text-blue-400 transition-colors">PMW3325 Optical Engine</div>
+                <div class="spec-value text-[13px] font-bold text-[#e8e8e8] group-hover:text-blue-400 transition-colors">PMW3325 Optical Engine</div>
                 <div class="mt-2 h-0.5 bg-white/[0.05] rounded-full overflow-hidden">
-                    <div class="h-full w-[85%] group-hover:w-full transition-all duration-500 rounded-full" style="background:linear-gradient(90deg,rgba(74,158,255,0.5),rgba(74,158,255,1))"></div>
+                    <div class="spec-bar-fill h-full w-[85%] group-hover:w-full transition-all duration-500 rounded-full" style="background:linear-gradient(90deg,rgba(74,158,255,0.5),rgba(74,158,255,1))"></div>
                 </div>
             </div>            
-            <span class="text-[8px] text-blue-400/45 tracking-[.15em] uppercase border border-blue-400/20 px-2 py-0.5 rounded-sm shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">Zero Lag</span>
+            <span class="spec-badge text-[8px] text-blue-400/45 tracking-[.15em] uppercase border border-blue-400/20 px-2 py-0.5 rounded-sm shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">Zero Lag</span>
         </div>
 
-        <div class="group flex items-center gap-5 px-7 py-[22px] bg-[#0d0d0d] border border-white/5 rounded-xl relative overflow-hidden transition-all duration-300 cursor-default hover:border-blue-400/15 hover:translate-x-1">
-            <div class="absolute left-0 top-0 bottom-0 w-0.5 bg-blue-400 scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-bottom rounded-bl-xl"></div>
-            <div class="absolute inset-0 bg-gradient-to-r from-blue-500/[0.04] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            <span class="text-[9px] text-white/12 tracking-[.25em] min-w-[24px] group-hover:text-blue-400/40 transition-colors shrink-0">03</span>
+        <div class="spec-row group flex items-center gap-5 px-7 py-[22px] bg-[#0d0d0d] border border-white/5 rounded-xl relative overflow-hidden transition-all duration-300 cursor-default hover:border-blue-400/15 hover:translate-x-1">
+            <div class="spec-accent-bar absolute left-0 top-0 bottom-0 w-0.5 bg-blue-400 scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-bottom rounded-bl-xl"></div>
+            <div class="spec-bg-glow absolute inset-0 bg-gradient-to-r from-blue-500/[0.04] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <span class="spec-number text-[9px] text-white/12 tracking-[.25em] min-w-[24px] group-hover:text-blue-400/40 transition-colors shrink-0">03</span>
             <div class="w-px h-7 bg-white/[0.06] shrink-0"></div>
             <div class="flex-1">
                 <div class="text-[9px] text-white/28 tracking-[.18em] uppercase mb-1">DPI Range</div>
-                <div class="text-[13px] font-bold text-[#e8e8e8] group-hover:text-blue-400 transition-colors">800 / 1200 / 1600 / 2400</div>
+                <div class="spec-value text-[13px] font-bold text-[#e8e8e8] group-hover:text-blue-400 transition-colors">800 / 1200 / 1600 / 2400</div>
                 <div class="mt-2 h-0.5 bg-white/[0.05] rounded-full overflow-hidden">
-                    <div class="h-full w-[100%] group-hover:w-full transition-all duration-500 rounded-full" style="background:linear-gradient(90deg,rgba(74,158,255,0.5),rgba(74,158,255,1))"></div>
+                    <div class="spec-bar-fill h-full w-[100%] group-hover:w-full transition-all duration-500 rounded-full" style="background:linear-gradient(90deg,rgba(74,158,255,0.5),rgba(74,158,255,1))"></div>
                 </div>
             </div>            
-            <span class="text-[8px] text-blue-400/45 tracking-[.15em] uppercase border border-blue-400/20 px-2 py-0.5 rounded-sm shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">Max DPI</span>
+            <span class="spec-badge text-[8px] text-blue-400/45 tracking-[.15em] uppercase border border-blue-400/20 px-2 py-0.5 rounded-sm shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">Max DPI</span>
         </div>
 
-        <div class="group flex items-center gap-5 px-7 py-[22px] bg-[#0d0d0d] border border-white/5 rounded-xl relative overflow-hidden transition-all duration-300 cursor-default hover:border-blue-400/15 hover:translate-x-1">
-            <div class="absolute left-0 top-0 bottom-0 w-0.5 bg-blue-400 scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-bottom rounded-bl-xl"></div>
-            <div class="absolute inset-0 bg-gradient-to-r from-blue-500/[0.04] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            <span class="text-[9px] text-white/12 tracking-[.25em] min-w-[24px] group-hover:text-blue-400/40 transition-colors shrink-0">04</span>
+        <div class="spec-row group flex items-center gap-5 px-7 py-[22px] bg-[#0d0d0d] border border-white/5 rounded-xl relative overflow-hidden transition-all duration-300 cursor-default hover:border-blue-400/15 hover:translate-x-1">
+            <div class="spec-accent-bar absolute left-0 top-0 bottom-0 w-0.5 bg-blue-400 scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-bottom rounded-bl-xl"></div>
+            <div class="spec-bg-glow absolute inset-0 bg-gradient-to-r from-blue-500/[0.04] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <span class="spec-number text-[9px] text-white/12 tracking-[.25em] min-w-[24px] group-hover:text-blue-400/40 transition-colors shrink-0">04</span>
             <div class="w-px h-7 bg-white/[0.06] shrink-0"></div>
             <div class="flex-1">
                 <div class="text-[9px] text-white/28 tracking-[.18em] uppercase mb-1">Polling Rate</div>
-                <div class="text-[13px] font-bold text-[#e8e8e8] group-hover:text-blue-400 transition-colors">1000 Hz <span style="font-size:11px;font-weight:400;color:rgba(255,255,255,0.28)">/ 1ms response</span></div>
+                <div class="spec-value text-[13px] font-bold text-[#e8e8e8] group-hover:text-blue-400 transition-colors">1000 Hz <span style="font-size:11px;font-weight:400;color:rgba(255,255,255,0.28)">/ 1ms response</span></div>
                 <div class="mt-2 h-0.5 bg-white/[0.05] rounded-full overflow-hidden">
-                    <div class="h-full w-[85%] group-hover:w-full transition-all duration-500 rounded-full" style="background:linear-gradient(90deg,rgba(74,158,255,0.5),rgba(74,158,255,1))"></div>
+                    <div class="spec-bar-fill h-full w-[85%] group-hover:w-full transition-all duration-500 rounded-full" style="background:linear-gradient(90deg,rgba(74,158,255,0.5),rgba(74,158,255,1))"></div>
                 </div>
             </div>            
-            <span class="text-[8px] text-blue-400/45 tracking-[.15em] uppercase border border-blue-400/20 px-2 py-0.5 rounded-sm shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">1ms</span>
+            <span class="spec-badge text-[8px] text-blue-400/45 tracking-[.15em] uppercase border border-blue-400/20 px-2 py-0.5 rounded-sm shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">1ms</span>
         </div>
 
-        <div class="group flex items-center gap-5 px-7 py-[22px] bg-[#0d0d0d] border border-white/5 rounded-xl relative overflow-hidden transition-all duration-300 cursor-default hover:border-blue-400/15 hover:translate-x-1">
-            <div class="absolute left-0 top-0 bottom-0 w-0.5 bg-blue-400 scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-bottom rounded-bl-xl"></div>
-            <div class="absolute inset-0 bg-gradient-to-r from-blue-500/[0.04] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            <span class="text-[9px] text-white/12 tracking-[.25em] min-w-[24px] group-hover:text-blue-400/40 transition-colors shrink-0">05</span>
+        <div class="spec-row group flex items-center gap-5 px-7 py-[22px] bg-[#0d0d0d] border border-white/5 rounded-xl relative overflow-hidden transition-all duration-300 cursor-default hover:border-blue-400/15 hover:translate-x-1">
+            <div class="spec-accent-bar absolute left-0 top-0 bottom-0 w-0.5 bg-blue-400 scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-bottom rounded-bl-xl"></div>
+            <div class="spec-bg-glow absolute inset-0 bg-gradient-to-r from-blue-500/[0.04] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <span class="spec-number text-[9px] text-white/12 tracking-[.25em] min-w-[24px] group-hover:text-blue-400/40 transition-colors shrink-0">05</span>
             <div class="w-px h-7 bg-white/[0.06] shrink-0"></div>
             <div class="flex-1">
                 <div class="text-[9px] text-white/28 tracking-[.18em] uppercase mb-1">Compatibility</div>
-                <div class="text-[13px] font-bold text-[#e8e8e8] group-hover:text-blue-400 transition-colors">Windows 10/11 · macOS · Linux</div>
-                <div class="mt-2 h-0.5 bg-white/[0.05] rounded-full overflow-hidden">
+                <div class="spec-value text-[13px] font-bold text-[#e8e8e8] group-hover:text-blue-400 transition-colors">Windows 10/11 · macOS · Linux</div>
+                <div class="spec-bar-fill mt-2 h-0.5 bg-white/[0.05] rounded-full overflow-hidden">
                     <div class="h-full w-[75%] group-hover:w-full transition-all duration-500 rounded-full" style="background:linear-gradient(90deg,rgba(74,158,255,0.5),rgba(74,158,255,1))"></div>
                 </div>
             </div>            
-            <span class="text-[8px] text-blue-400/45 tracking-[.15em] uppercase border border-blue-400/20 px-2 py-0.5 rounded-sm shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">Universal</span>
+            <span class="spec-badge text-[8px] text-blue-400/45 tracking-[.15em] uppercase border border-blue-400/20 px-2 py-0.5 rounded-sm shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">Universal</span>
         </div>
 
-        <div class="group flex items-center gap-5 px-7 py-[22px] bg-[#0d0d0d] border border-white/5 rounded-xl relative overflow-hidden transition-all duration-300 cursor-default hover:border-blue-400/15 hover:translate-x-1">
-            <div class="absolute left-0 top-0 bottom-0 w-0.5 bg-blue-400 scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-bottom rounded-bl-xl"></div>
-            <div class="absolute inset-0 bg-gradient-to-r from-blue-500/[0.04] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            <span class="text-[9px] text-white/12 tracking-[.25em] min-w-[24px] group-hover:text-blue-400/40 transition-colors shrink-0">06</span>
+        <div class="spec-row group flex items-center gap-5 px-7 py-[22px] bg-[#0d0d0d] border border-white/5 rounded-xl relative overflow-hidden transition-all duration-300 cursor-default hover:border-blue-400/15 hover:translate-x-1">
+            <div class="spec-accent-bar absolute left-0 top-0 bottom-0 w-0.5 bg-blue-400 scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-bottom rounded-bl-xl"></div>
+            <div class="spec-bg-glow absolute inset-0 bg-gradient-to-r from-blue-500/[0.04] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <span class="spec-number text-[9px] text-white/12 tracking-[.25em] min-w-[24px] group-hover:text-blue-400/40 transition-colors shrink-0">06</span>
             <div class="w-px h-7 bg-white/[0.06] shrink-0"></div>
             <div class="flex-1">
                 <div class="text-[9px] text-white/28 tracking-[.18em] uppercase mb-1">Cable Length</div>
-                <div class="text-[13px] font-bold text-[#e8e8e8] group-hover:text-blue-400 transition-colors">1.8m Braided Nylon</div>
+                <div class="spec-value text-[13px] font-bold text-[#e8e8e8] group-hover:text-blue-400 transition-colors">1.8m Braided Nylon</div>
                 <div class="mt-2 h-0.5 bg-white/[0.05] rounded-full overflow-hidden">
-                    <div class="h-full w-[65%] group-hover:w-full transition-all duration-500 rounded-full" style="background:linear-gradient(90deg,rgba(74,158,255,0.5),rgba(74,158,255,1))"></div>
+                    <div class="spec-bar-fill h-full w-[65%] group-hover:w-full transition-all duration-500 rounded-full" style="background:linear-gradient(90deg,rgba(74,158,255,0.5),rgba(74,158,255,1))"></div>
                 </div>
             </div>            
-            <span class="text-[8px] text-blue-400/45 tracking-[.15em] uppercase border border-blue-400/20 px-2 py-0.5 rounded-sm shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">Braided</span>
+            <span class="spec-badge text-[8px] text-blue-400/45 tracking-[.15em] uppercase border border-blue-400/20 px-2 py-0.5 rounded-sm shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">Braided</span>
         </div>
 
         <div class="sfoot">
@@ -1496,7 +1593,7 @@
     </section>
 
     <!-- Reviews -->
-    <section class="py-24 bg-black relative">
+    <section id="testimonial" class="py-24 bg-black relative">
         <div class="container mx-auto px-6">
             <div class="section-label">Testimonial</div>
             <h2 class="font-display text-5xl md:text-6xl font-bold leading-tight" style="font-family:'Bebas Neue',sans-serif; letter-spacing:0.02em; font-weight: 400; padding-bottom: 10px;">Pro User <span class="text-transparent bg-clip-text" style="background-image: linear-gradient(90deg,#60a5fa,#a78bfa);">Reviews</span></h2>
@@ -1594,7 +1691,7 @@
     <footer class="py-12 bg-black border-t border-white/5">
         <div class="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center">
             <div class="mb-4 md:mb-0">
-                <span class="font-display text-xl font-bold text-white" style="font-family:'Bebas Neue',sans-serif;letter-spacing:0.1em;">CLICK<span style="color:#4F8CFF">BOOST</span>BOOST</span></span>
+                <span class="font-display text-xl font-bold text-white" style="font-family:'Bebas Neue',sans-serif;letter-spacing:0.1em;">CLICK<span style="color:#4F8CFF">BOOST</span>
                 <p class="text-gray-600 text-sm mt-2">© 2026 ClickBoost. All rights reserved.</p>
             </div>
             <div class="flex space-x-6">
